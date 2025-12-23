@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -19,7 +20,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@repo/db": ["../../packages/db"],
+      "@repo/queue": ["../../packages/queue"],
+      "@repo/auth": ["../../packages/auth"],
+      "@repo/rate-limit": ["../../packages/rate-limit"],
+      "@repo/types": ["../../packages/types"]
     }
   },
   "include": [

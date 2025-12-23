@@ -1,0 +1,9 @@
+{
+    "extends": "../typescript-config/base.json",
+    "compilerOptions": {
+      "types": ["node"],
+      "moduleResolution":"Bundler",
+      "module":"ESNext"
+    },
+    "include": ["**/*.ts", "prisma.config.ts","generated/**/*.ts"]
+  }

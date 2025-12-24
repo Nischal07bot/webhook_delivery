@@ -1,9 +1,11 @@
 {
-    "extends": "../typescript-config/base.json",
-    "compilerOptions": {
-      "types": ["node"],
-      "moduleResolution":"Bundler",
-      "module":"ESNext"
-    },
-    "include": ["**/*.ts", "prisma.config.ts","generated/**/*.ts"]
-  }
+  "extends": "../typescript-config/base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "prisma.config.ts", "generated/**/*.ts"]
+}

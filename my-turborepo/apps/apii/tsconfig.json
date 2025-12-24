@@ -21,7 +21,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@repo/db": ["../../packages/db"],
+      "@repo/db": ["../../packages/db/src/index"],
       "@repo/queue": ["../../packages/queue"],
       "@repo/auth": ["../../packages/auth"],
       "@repo/rate-limit": ["../../packages/rate-limit"],

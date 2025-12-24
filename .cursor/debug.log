@@ -1,0 +1,3 @@
+{"location":"route.ts:5","message":"POST /api/events called","data":{"hasPrisma":true},"timestamp":1766572859531,"sessionId":"debug-session","runId":"post-fix-v3","hypothesisId":"D"}
+{"location":"route.ts:18","message":"Before prisma.event.create","data":{"hasPrisma":true,"bodyType":"payment.succeeded"},"timestamp":1766572859543,"sessionId":"debug-session","runId":"post-fix-v3","hypothesisId":"D"}
+{"location":"route.ts:37","message":"Error in POST handler","data":{"errorName":"PrismaClientKnownRequestError","errorMessage":"\nInvalid `prisma.event.create()` invocation:\n\n\nCan't reach database server at 127.0.0.1:5432"},"timestamp":1766572859720,"sessionId":"debug-session","runId":"post-fix-v3","hypothesisId":"D"}

@@ -15,6 +15,8 @@ export async function POST(request: NextRequest){
                 {status: 400}
             )
         }
+        console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+
         
         // #region agent log
         fetch('http://127.0.0.1:7242/ingest/249e0665-9738-434b-a0fc-21864dee3f55',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'route.ts:18',message:'Before prisma.event.create',data:{hasPrisma:!!prisma,bodyType:body.type},timestamp:Date.now(),sessionId:'debug-session',runId:'post-fix-v3',hypothesisId:'D'})}).catch(()=>{});

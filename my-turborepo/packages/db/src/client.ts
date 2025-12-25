@@ -37,7 +37,7 @@ if (isNeon) {
 const pool = new Pool(poolConfig);
 
 // Handle pool errors
-pool.on('error', (err: Error) => {
+/*pool.on('error', (err: Error) => {
   console.error('Database pool error:', err.message);
 });
 
@@ -71,7 +71,7 @@ if (process.env.NODE_ENV !== 'production') {
         console.error('\n⚠️  Connection refused - database may be down or firewall blocking');
       }
     });
-}
+}*/
 
 const adapter = new PrismaPg(pool);
 

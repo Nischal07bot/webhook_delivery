@@ -40,11 +40,15 @@ model Event {
   projectId  String
   type        String
   payload     Json
-  idempotencyKey String?
+  idempotencyKey String //there cannot be a single event with the same idempotency key
+  //for a project id also this is neccesary that is why removed ?
   createdAt   DateTime @default(now())
 
   project     Project @relation(fields: [projectId], references: [id])
   deliveries  Delivery[]
+
+  @@unique([projectId, idempotencyKey])
+  @@index([projectId, createdAt])
 }
 
 model Delivery {

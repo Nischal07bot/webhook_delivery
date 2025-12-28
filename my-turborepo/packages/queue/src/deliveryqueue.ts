@@ -1,5 +1,5 @@
 import { Queue } from 'bullmq';
-import { createRedisConnection } from './connection.ts';
+import { createRedisConnection } from './connection';
 
 export const deliveryQueue = new Queue('deliveryQueue',{
     connection: createRedisConnection,

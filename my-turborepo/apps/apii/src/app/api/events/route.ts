@@ -1,6 +1,7 @@
 import { NextRequest,NextResponse } from "next/server";
 import { prisma } from "@repo/db"
 import { DeliveryStatus } from "@repo/db";
+import { deliveryQueue } from "@repo/queue";
 export async function POST(request: NextRequest){
         const body =await request.json();
         const idempotencykey=request.headers.get("idempotency-key");
@@ -52,9 +53,25 @@ export async function POST(request: NextRequest){
                     eventId: event.id,
                     webhookId: endpoint.id,
                     status: DeliveryStatus.PENDING,
-                    attempt: 1,
                 }))
         })
+        const enqueuedeliveries =await prisma.delivery.findMany({
+            where:{
+                eventId:event.id
+            }
+        })
+        for(const delivery of enqueuedeliveries)
+        {
+            await deliveryQueue.add(
+                "deliver-webhook",
+                {
+                    deliveryId:delivery.id
+                },
+                {
+                    jobId:delivery.id
+                }
+            );
+        }
         //queueing logic here 
         return NextResponse.json({
             eventId:event.id,
@@ -99,6 +116,14 @@ export async function POST(request: NextRequest){
                 const newDeliveries=await prisma.delivery.createMany({
                     data:newEndpoints
                 })
+                const enqueuedeliveries =await prisma.delivery.findMany({
+                    where:{
+                        eventId:existingevent.id,
+                        webhookId:{
+                            in:newEndpoints.map((ep:any)=>ep.webhookId)
+                        }
+                    }
+                })                
             }
             return NextResponse.json({
                 eventId:existingevent?.id,

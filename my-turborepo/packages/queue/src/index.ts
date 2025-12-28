@@ -1,2 +1,2 @@
-export * from "./deliveryqueue.ts";
-export * from "./connection.ts";
+export * from "./deliveryqueue";
+export * from "./connection";

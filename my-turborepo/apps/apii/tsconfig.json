@@ -22,7 +22,7 @@
     "paths": {
       "@/*": ["./*"],
       "@repo/db": ["../../packages/db/src/index"],
-      "@repo/queue": ["../../packages/queue"],
+      "@repo/queue": ["../../packages/queue/src/index"],
       "@repo/auth": ["../../packages/auth"],
       "@repo/rate-limit": ["../../packages/rate-limit"],
       "@repo/types": ["../../packages/types"]

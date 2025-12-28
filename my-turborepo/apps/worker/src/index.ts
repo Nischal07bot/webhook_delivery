@@ -9,6 +9,7 @@ console.log("Worker started...");
 
 
 const worker = new Worker('deliveryQueue', async(job)=>{
+    console.log("Processing job:", job.id);
     const { deliveryId } = job.data;
     const delivery = await prisma.delivery.findUnique({
         where:{

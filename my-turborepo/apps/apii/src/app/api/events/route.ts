@@ -116,14 +116,26 @@ export async function POST(request: NextRequest){
                 const newDeliveries=await prisma.delivery.createMany({
                     data:newEndpoints
                 })
-                const enqueuedeliveries =await prisma.delivery.findMany({
+                const enqueuedeliveriesduplicate=await prisma.delivery.findMany({
                     where:{
                         eventId:existingevent.id,
                         webhookId:{
                             in:newEndpoints.map((ep:any)=>ep.webhookId)
                         }
                     }
-                })                
+                })        
+                for(const delivery of enqueuedeliveriesduplicate)
+                {
+                    await deliveryQueue.add(
+                        "deliver-webhook",
+                        {
+                            deliveryId:delivery.id
+                        },
+                        {
+                            jobId:delivery.id
+                        }
+                    );
+                }        
             }
             return NextResponse.json({
                 eventId:existingevent?.id,

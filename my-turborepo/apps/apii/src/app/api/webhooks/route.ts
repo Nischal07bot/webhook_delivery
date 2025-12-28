@@ -27,3 +27,22 @@ export async function POST(request: NextRequest){
             secret:webhook.secret
         })
 }
+
+export async function GET(request: NextRequest){
+    const projectId=request.nextUrl.searchParams.get("projectId");
+    if(!projectId){
+        return NextResponse.json(
+            {
+                error:"projectId query param missing"
+            },{
+                status:400
+            }
+        )
+    }
+    const webhooks=await prisma.webhook.findMany({
+        where:{
+            projectId:projectId
+        }
+    })
+    return NextResponse.json(webhooks)
+}

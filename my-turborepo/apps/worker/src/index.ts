@@ -1,4 +1,5 @@
 //here the worker will the process the jobs from the queue and deliver the webhooks
+import "dotenv/config";
 import { Worker } from "bullmq";
 import { createRedisConnection } from "@repo/queue";
 import { prisma } from "@repo/db";

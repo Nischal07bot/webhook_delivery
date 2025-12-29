@@ -96,11 +96,11 @@ export async function POST(request: NextRequest){
             if (!existingevent?.id) {
                 throw new Error("Existing event not found");
             }
-            const newEndpoints=endpoints.filter((endpoint:any)=>!existingWebhookIds.has(endpoint.url)).map((
+            const newEndpoints=endpoints.filter((endpoint:any)=>!existingWebhookIds.has(endpoint.id)).map((
                 endpoint:any
             )=>({
                 eventId:existingevent.id,
-                webhookId:endpoint.url,
+                webhookId:endpoint.id,
                 status:DeliveryStatus.PENDING,
                 attempt:1
             }))

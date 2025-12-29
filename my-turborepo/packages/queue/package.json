@@ -10,11 +10,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/ioredis": "^4.28.10"
   },
   "dependencies": {
-    "bullmq": "^5.66.4"
+    "bullmq": "^5.66.4",
+    "dotenv": "^16.4.5",
+    "ioredis": "^5.4.2"
   }
 }

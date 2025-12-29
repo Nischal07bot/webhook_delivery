@@ -23,7 +23,7 @@
       "@/*": ["./*"],
       "@repo/db": ["../../packages/db/src/index"],
       "@repo/queue": ["../../packages/queue/src/index"],
-      "@repo/auth": ["../../packages/auth"],
+      "@repo/auth": ["../../packages/auth/src/reqproject"],
       "@repo/rate-limit": ["../../packages/rate-limit"],
       "@repo/types": ["../../packages/types"]
     }

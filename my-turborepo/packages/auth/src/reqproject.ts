@@ -1,7 +1,6 @@
 import { prisma } from "@repo/db";
-import { NextRequest } from "next/server";
 
-export async function reqproject(request: NextRequest){ 
+export async function reqproject(request: Request){ 
     const body=request.headers.get("authorization");
 
     if(!body || !body.startsWith("Bearer ")){

@@ -1,11 +1,13 @@
-import { NextRequest,NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@repo/db"
 import { DeliveryStatus } from "@repo/db"
 import crypto from "crypto"
+import { reqproject } from "@repo/auth";
 
 export async function POST(request: NextRequest){
         const body =await request.json();
-        if (!body.projectId || !body.url) 
+        const project=await reqproject(request);
+        if (!body.url) 
         {
             return NextResponse.json(
             { error: "projectId and url required" },
@@ -15,7 +17,7 @@ export async function POST(request: NextRequest){
         const secret="whsec_"+crypto.randomBytes(24).toString("hex");
         const webhook=await prisma.webhook.create({
             data:{
-                projectId:body.projectId,
+                projectId:project.id,
                 url:body.url,
                 secret:secret,
                 isActive:true
@@ -29,7 +31,8 @@ export async function POST(request: NextRequest){
 }
 
 export async function GET(request: NextRequest){
-    const projectId=request.nextUrl.searchParams.get("projectId");
+    const project=await reqproject(request);
+    const projectId=project.id;
     if(!projectId){
         return NextResponse.json(
             {

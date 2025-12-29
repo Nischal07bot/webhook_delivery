@@ -2,8 +2,10 @@ import { NextRequest,NextResponse } from "next/server";
 import { prisma } from "@repo/db"
 import { DeliveryStatus } from "@repo/db";
 import { deliveryQueue } from "@repo/queue";
+import { reqproject } from "@repo/auth";
 export async function POST(request: NextRequest){
         const body =await request.json();
+        const project=await reqproject(request);
         const idempotencykey=request.headers.get("idempotency-key");
         if(!idempotencykey)
         {
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest){
         console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
         const endpoints=await prisma.webhook.findMany({
             where:{
-                projectId:body.projectId,
+                projectId:project.id,
                 isActive:true
             },
             select:{
@@ -29,18 +31,9 @@ export async function POST(request: NextRequest){
             }
         })
     try {
-        await prisma.project.upsert({
-             where: { id: body.projectId },
-             update: {},
-             create: {
-               id: body.projectId,
-               name: "Auto-created project (dev)",
-               apiKey: `key_${body.projectId}_${Date.now()}`
-          } 
-  });
         const event = await prisma.event.create({
             data:{
-                projectId:body.projectId,
+                projectId:project.id,
                 type:body.type,
                 payload:body.payload,
                 idempotencyKey:idempotencykey
@@ -85,7 +78,7 @@ export async function POST(request: NextRequest){
             const existingevent=await prisma.event.findUnique({
                 where:{
                     projectId_idempotencyKey:{
-                        projectId:body.projectId,
+                        projectId:project.id,
                         idempotencyKey:idempotencykey
                     }
                 }

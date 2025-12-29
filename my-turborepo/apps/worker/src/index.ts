@@ -5,7 +5,7 @@ import { createRedisConnection } from "@repo/queue";
 import { prisma } from "@repo/db";
 import fetch from "node-fetch";
 import { DeliveryStatus } from "@repo/db";
-
+import { generatesignature } from "./signature"
 console.log("Worker started...");
 
 
@@ -25,11 +25,15 @@ const worker = new Worker('deliveryQueue', async(job)=>{
         throw new Error("Delivery not found");
     }
     try{
+        const secret=delivery.webhook.secret;
+        const payload=JSON.stringify(delivery.event.payload);
+        const {timestamp,signature}=generatesignature(payload,secret);
         const response = await fetch(delivery.webhook.url,{
             method: "POST",
             headers: {
             "Content-Type": "application/json",
-            "X-Event-Type": delivery.event.type
+            "X-Event-Type": delivery.event.type,
+            "X-Signature": `t=${timestamp},v1=${signature}`
             },
             body: JSON.stringify(delivery.event.payload)
         });

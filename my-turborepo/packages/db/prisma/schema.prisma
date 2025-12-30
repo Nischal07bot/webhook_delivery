@@ -65,11 +65,27 @@ model Delivery {
 
   event      Event    @relation(fields: [eventId], references: [id])
   webhook    Webhook  @relation(fields: [webhookId], references: [id])
-
+  attempts   DeliveryAttempt[]
   @@index([eventId])
   @@index([webhookId, status])
   @@unique([eventId, webhookId])
 }
+
+model DeliveryAttempt {
+  id           String   @id @default(uuid())
+  deliveryId   String
+  attempt      Int
+  status       DeliveryStatus
+  s3ObjectKey  String
+  latencyMs    Int
+  createdAt    DateTime @default(now())
+
+  delivery     Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@unique([deliveryId, attempt])
+  @@index([deliveryId])
+}
+
 
 enum DeliveryStatus {
   PENDING

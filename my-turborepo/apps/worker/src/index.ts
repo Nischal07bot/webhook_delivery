@@ -51,12 +51,14 @@ const worker = new Worker('deliveryQueue', async(job)=>{
         }
     }
     catch(error:any){
+        const islastattempt=job.attemptsMade+1 >= job.opts.attempts!;
         await prisma.delivery.update({
             where:{
                 id: delivery.id
             },
             data:{
-                status: DeliveryStatus.RETRYING,
+                status: islastattempt? DeliveryStatus.DEAD : DeliveryStatus.PENDING,
+                attempt: job.attemptsMade+1,
                 error: error.message,
             }
         });

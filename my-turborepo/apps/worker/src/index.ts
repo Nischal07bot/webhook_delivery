@@ -60,13 +60,13 @@ const worker = new Worker('deliveryQueue', async(job)=>{
         errorMessage=error.message;
     }
     const latency=Date.now()-start;
-
+    const curreAttempt=delivery.attempt+1;
 
     const s3Key = await uploadDeliveryLog({
         projectId: projectId,
-        eventId: delivery.eventId,
+        eventId: delivery.event.id,
         deliveryId: delivery.id,
-        attempt: delivery.attempt,
+        attempt: curreAttempt,
         payload: {
             request: {
                 url: delivery.webhook.url,
@@ -89,7 +89,7 @@ const worker = new Worker('deliveryQueue', async(job)=>{
     await prisma.deliveryAttempt.create({
         data: {
             deliveryId: delivery.id,
-            attempt: delivery.attempt,
+            attempt: curreAttempt,
             status: success ? "SUCCESS" : "FAILED",
             s3ObjectKey: s3Key,
             latencyMs:latency

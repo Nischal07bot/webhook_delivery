@@ -4,8 +4,11 @@ import { DeliveryStatus } from "@repo/db";
 import { deliveryQueue } from "@repo/queue";
 import { reqproject } from "@repo/auth";
 
-export async function POST(request: NextRequest){
-    const deliveryId=request.nextUrl.searchParams.get("id");
+export async function POST(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id: deliveryId } = await params;
     const project=await reqproject(request);
     if(!deliveryId){
         return NextResponse.json(

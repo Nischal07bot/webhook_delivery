@@ -107,7 +107,9 @@ const worker = new Worker('deliveryQueue', async(job)=>{
         }
     });
 
-    const isLastAttempt = job.attemptsMade + 1 >= job.opts.attempts!;
+    const isLastAttempt = job.attemptsMade+1 >= job.opts.attempts!;
+    console.log(`attempt:-${curreAttempt} for deliveryId:-${delivery.id}`);
+    console.log(`attempts:-${job.attemptsMade+1} for deliveryId:-${delivery.id}`);
 
     await prisma.delivery.update({
         where: { id: delivery.id },
@@ -117,7 +119,7 @@ const worker = new Worker('deliveryQueue', async(job)=>{
                 : isLastAttempt
                     ? DeliveryStatus.DEAD
                     : DeliveryStatus.PENDING,
-            attempt: job.attemptsMade + 1,
+            attempt: curreAttempt,
             responseCode: responseStatus,
             error: errorMessage
         }

@@ -3,6 +3,7 @@ import { prisma } from "@repo/db"
 import { DeliveryStatus } from "@repo/db";
 import { deliveryQueue } from "@repo/queue";
 import { reqproject } from "@repo/auth";
+import { attachReactRefresh } from "next/dist/build/webpack-config";
 export async function POST(request: NextRequest){
         const body =await request.json();
         const project=await reqproject(request);
@@ -46,6 +47,7 @@ export async function POST(request: NextRequest){
                     eventId: event.id,
                     webhookId: endpoint.id,
                     status: DeliveryStatus.PENDING,
+                    attempt:0
                 }))
         })
         const enqueuedeliveries =await prisma.delivery.findMany({
@@ -102,7 +104,7 @@ export async function POST(request: NextRequest){
                 eventId:existingevent.id,
                 webhookId:endpoint.id,
                 status:DeliveryStatus.PENDING,
-                attempt:1
+                attempt:0
             }))
             if(newEndpoints.length>0)
             {

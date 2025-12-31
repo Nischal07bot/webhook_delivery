@@ -21,6 +21,7 @@
     ],
     "paths": {
       "@/*": ["./*"],
+      "@repo/infra":["../../packages/infra/src/index"],
       "@repo/db": ["../../packages/db/src/index"],
       "@repo/queue": ["../../packages/queue/src/index"],
       "@repo/auth": ["../../packages/auth"],

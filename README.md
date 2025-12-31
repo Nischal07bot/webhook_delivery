@@ -50,6 +50,7 @@ Everything must be replayable
 
 Observability > convenience
 🏗️ High-Level Architecture
+<pre>
 ┌────────────┐
 │   Client   │
 │ (Your App) │
@@ -98,7 +99,7 @@ Observability > convenience
 │ - One file per try   │
 │ - Infinite retention │
 └──────────────────────┘
-
+</pre>
 
 ✅ What’s Already Built
 🔐 Project-based Authentication

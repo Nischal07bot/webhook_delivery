@@ -49,7 +49,6 @@ Failures are first-class citizens
 Everything must be replayable
 
 Observability > convenience
-
 🏗️ High-Level Architecture
 ┌────────────┐
 │   Client   │
@@ -99,6 +98,7 @@ Observability > convenience
 │ - One file per try   │
 │ - Infinite retention │
 └──────────────────────┘
+
 
 ✅ What’s Already Built
 🔐 Project-based Authentication

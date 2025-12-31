@@ -86,13 +86,24 @@ const worker = new Worker('deliveryQueue', async(job)=>{
             timestamp: new Date().toISOString()
         }
     });
-    await prisma.deliveryAttempt.create({
-        data: {
+    await prisma.deliveryAttempt.upsert({
+        where: {
+            deliveryId_attempt: {
+                deliveryId: delivery.id,
+                attempt: curreAttempt
+            }
+        },
+        update: {
+            status: success ? "SUCCESS" : "FAILED",
+            s3ObjectKey: s3Key,
+            latencyMs: latency
+        },
+        create: {
             deliveryId: delivery.id,
             attempt: curreAttempt,
             status: success ? "SUCCESS" : "FAILED",
             s3ObjectKey: s3Key,
-            latencyMs:latency
+            latencyMs: latency
         }
     });
 

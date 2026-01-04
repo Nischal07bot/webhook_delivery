@@ -1,10 +1,16 @@
 import { NextResponse,NextRequest } from "next/server";
 import { prisma } from "@repo/db" 
 import crypto from "crypto";
-
+import { requser } from "@repo/auth";
 export async function POST(request: NextRequest){
     const body=await request.json();
-    
+    const user= await requser(request);
+    if(!user){
+        return NextResponse.json(
+            {error:"Unauthorized"},
+            {status:401}
+        )
+    }
     if(!body.name){
         return NextResponse.json(
             {error:"Project name missing"},
@@ -15,7 +21,8 @@ export async function POST(request: NextRequest){
     const project=await prisma.project.create({
         data:{
             name:body.name,
-            apiKey:api_key
+            apiKey:api_key,
+            userId:user.id
         }
     })
     return NextResponse.json({

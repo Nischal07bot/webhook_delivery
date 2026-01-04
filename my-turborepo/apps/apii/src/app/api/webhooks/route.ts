@@ -3,10 +3,36 @@ import { prisma } from "@repo/db"
 import { DeliveryStatus } from "@repo/db"
 import crypto from "crypto"
 import { reqproject } from "@repo/auth";
+import { requser } from "@repo/auth";
 
 export async function POST(request: NextRequest){
         const body =await request.json();
-        const project=await reqproject(request);
+        const user = await requser(request);
+        const projectId=body.projectId;
+        if(!user){
+            return NextResponse.json({
+                error:"Unauthorized"
+            },
+            {status:401}
+            );
+        }
+        if(!projectId){
+            return NextResponse.json({
+                error:"projectId required"
+            })
+        }
+        const exists=await prisma.project.findFirst({
+            where:{
+                id:projectId,
+                userId:user.id
+            }
+        })
+        if(!exists){
+            return NextResponse.json(
+                {error:"Project not found"},
+                {status:404}
+            )
+        }
         if (!body.url) 
         {
             return NextResponse.json(
@@ -17,7 +43,7 @@ export async function POST(request: NextRequest){
         const secret="whsec_"+crypto.randomBytes(24).toString("hex");
         const webhook=await prisma.webhook.create({
             data:{
-                projectId:project.id,
+                projectId:projectId,
                 url:body.url,
                 secret:secret,
                 isActive:true
@@ -31,8 +57,14 @@ export async function POST(request: NextRequest){
 }
 
 export async function GET(request: NextRequest){
-    const project=await reqproject(request);
-    const projectId=project.id;
+    const user= await requser(request);
+    if(!user){
+        return NextResponse.json(
+            {error:"Unauthorized"},
+            {status:401}
+        )
+    }
+    const projectId = request.nextUrl.searchParams.get("projectId");
     if(!projectId){
         return NextResponse.json(
             {
@@ -42,6 +74,12 @@ export async function GET(request: NextRequest){
             }
         )
     }
+    const project=await prisma.project.findFirst({
+        where:{
+            id:projectId,
+            userId:user.id
+        }
+    })
     const webhooks=await prisma.webhook.findMany({
         where:{
             projectId:projectId

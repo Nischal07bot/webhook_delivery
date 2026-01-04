@@ -80,10 +80,16 @@ export async function GET(request: NextRequest){
             userId:user.id
         }
     })
+    if(!project){
+        return NextResponse.json(
+            {error:"Project not found"},
+            {status:404}
+        )
+    }
     const webhooks=await prisma.webhook.findMany({
         where:{
             projectId:projectId
         }
-    })
+    });
     return NextResponse.json(webhooks)
 }

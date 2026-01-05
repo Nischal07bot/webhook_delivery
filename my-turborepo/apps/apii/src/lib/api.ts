@@ -9,7 +9,20 @@ export async function fetchapi(url: string, options: RequestInit={}): Promise<an
     });
 
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+            const errorData = await response.json();
+            if (errorData.message) {
+                errorMessage = errorData.message;
+            } else if (errorData.error) {
+                errorMessage = errorData.error;
+            }
+        } catch {
+            // If response is not JSON, use default error message
+        }
+        const error = new Error(errorMessage);
+        (error as any).status = response.status;
+        throw error;
     }
     return response.json();
 }
